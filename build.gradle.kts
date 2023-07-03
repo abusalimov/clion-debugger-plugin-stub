@@ -44,4 +44,9 @@ tasks {
     publishPlugin {
         token.set(System.getenv("PUBLISH_TOKEN"))
     }
+
+    test {
+        systemProperty("idea.log.config.properties.file", "${project.rootDir}/src/test/resources/test-log.properties")
+        systemProperty("idea.test.logs.echo.debug.to.stdout", true)
+    }
 }
