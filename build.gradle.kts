@@ -48,5 +48,10 @@ tasks {
     test {
         systemProperty("idea.log.config.properties.file", "${project.rootDir}/src/test/resources/test-log.properties")
         systemProperty("idea.test.logs.echo.debug.to.stdout", true)
+
+        // optional properties to enable running tests in a different environment (choose at most one of these):
+//        systemProperty("cpp.test.wsl.name", "Ubuntu2204")
+//        systemProperty("cpp.test.docker.image.name", "clion-ubuntu-devenv:latest")
+//        systemProperty("cpp.test.mingw.home", "C:\\tools\\mingw64\\i686-8.1.0-release-posix-dwarf-rt_v6-rev0\\mingw32")
     }
 }
