@@ -12,12 +12,12 @@ import com.jetbrains.cidr.execution.debugger.backend.DebuggerDriverConfiguration
 class MyDebuggingFixture(executionFixture: CMakeExecutionFixture) :
     CLionDebuggingFixture<CMakeExecutionFixture>(DebuggerDriverKind.GDB, executionFixture) {
 
-    fun createDriverConfiguration(): DebuggerDriverConfiguration {
-        return createDriverConfiguration { cl -> cl /* ignored */ }
+    override fun createDriverConfiguration(driverCommandLineConfigurator: Function.Mono<GeneralCommandLine>?): DebuggerDriverConfiguration {
+        return createDriverConfiguration()
     }
 
-    override fun createDriverConfiguration(driverCommandLineConfigurator: Function.Mono<GeneralCommandLine>?): DebuggerDriverConfiguration {
-        setUpToolchain() // a bit hackish to do that in a (supposedly pure) factory method
+    fun createDriverConfiguration(): DebuggerDriverConfiguration {
+        setUpToolchain() // a bit hackish to do that in a (supposedly pure) factory method, probably unnecessary
         return CLionGDBDriverConfiguration(myExecutionFixture.projectFixture.project, environment)
     }
 
