@@ -1,6 +1,5 @@
 package com.example.helloplugin
 
-import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.xdebugger.XDebuggerAssertions.assertCurrentPosition
 import com.intellij.xdebugger.XDebuggerTestUtil.toggleBreakpoint
@@ -13,7 +12,6 @@ import com.jetbrains.cidr.cpp.toolchains.CPPEnvironment
 import com.jetbrains.cidr.execution.debugger.CidrDebuggingTestCase
 import com.jetbrains.cidr.execution.debugger.DebuggerDriverKind
 import org.junit.Test
-import java.io.File
 
 
 class MyGDBSessionTest :
@@ -34,9 +32,7 @@ class MyGDBSessionTest :
     }
 
     override fun createTestDataFixture(): CidrTestDataFixture {
-        val testData =
-            checkNotNull(PathManager.getResourceRoot(MyGDBSessionTest::class.java, "/projects")) { "testData" }
-        return CidrTestDataFixture(File(testData), false)
+        return MyTestDataFixture.create()
     }
 
     override fun createProjectMarkup(projectDir: VirtualFile): MyTestProjectMarkup {

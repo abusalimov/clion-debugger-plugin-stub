@@ -1,6 +1,5 @@
 package com.example.helloplugin
 
-import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.jetbrains.cidr.CidrTestDataFixture
 import com.jetbrains.cidr.CidrTestProjectDescription
@@ -15,7 +14,6 @@ import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture.DriverEvent
 import com.jetbrains.cidr.execution.debugger.DebuggerDriverKind
 import com.jetbrains.cidr.execution.debugger.backend.DebuggerDriver.StopPlace
 import org.junit.Test
-import java.io.File
 import java.util.concurrent.BlockingQueue
 
 class MyGDBDriverTest :
@@ -37,9 +35,7 @@ class MyGDBDriverTest :
     }
 
     override fun createTestDataFixture(): CidrTestDataFixture {
-        val testData =
-            checkNotNull(PathManager.getResourceRoot(MyGDBDriverTest::class.java, "/projects")) { "testData" }
-        return CidrTestDataFixture(File(testData), false)
+        return MyTestDataFixture.create()
     }
 
     override fun createProjectMarkup(projectDir: VirtualFile): MyTestProjectMarkup {
