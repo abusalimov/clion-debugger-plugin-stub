@@ -11,7 +11,7 @@ import com.jetbrains.cidr.cpp.toolchains.CPPEnvironment
 import com.jetbrains.cidr.execution.debugger.CidrDebuggerTestCase
 import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture
 import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture.DriverEvent
-import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture.DriverEvent.Kind.*
+import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture.DriverEvent.Kind.INTERRUPTED
 import com.jetbrains.cidr.execution.debugger.DebuggerDriverKind
 import org.junit.Test
 import java.util.concurrent.BlockingQueue
@@ -29,7 +29,20 @@ class MyGDBDriverTest :
     override fun getEnvironment(): CPPEnvironment = CPPTestCase.getTestCPPEnvironment()
 
     @Test
-    @Throws(Exception::class)
+    fun testDriverBreakpointInMain() {
+        val events: BlockingQueue<out DriverEvent?> = startDriverAndLaunch(
+            targetExecutionCheckpointEvents(),
+            withBreakpoint(myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_MAIN_RETURN)
+        )
+        val stopPlace = CidrDebuggingFixture.waitForEvent(events, BREAKPOINT).stopPlace
+        assertFrame(
+            stopPlace.frame, 0,
+            myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_MAIN_RETURN,
+            "main"
+        )
+    }
+
+    @Test
     fun testDriverStepInto() {
         val events: BlockingQueue<out DriverEvent?> = startDriverAndLaunch(
             "fun", targetExecutionCheckpointEvents(),

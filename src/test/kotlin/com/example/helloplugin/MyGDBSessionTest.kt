@@ -10,7 +10,7 @@ import com.jetbrains.cidr.cpp.execution.CMakeExecutionFixture
 import com.jetbrains.cidr.cpp.execution.debugger.gdb.CMakeGDBDebuggingFixture
 import com.jetbrains.cidr.cpp.toolchains.CPPEnvironment
 import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture
-import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture.DebuggerState.*
+import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture.DebuggerState.RESUMED
 import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture.waitForEvent
 import com.jetbrains.cidr.execution.debugger.CidrDebuggingTestCase
 import com.jetbrains.cidr.execution.debugger.DebuggerDriverKind
@@ -30,7 +30,13 @@ class MyGDBSessionTest :
     override fun getEnvironment(): CPPEnvironment = CPPTestCase.getTestCPPEnvironment()
 
     @Test
-    @Throws(Exception::class)
+    fun testSessionBreakpointInMain() {
+        toggleBreakpoint(project, myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_MAIN_RETURN)
+        startDebugSessionAndWaitForPause()
+        assertCurrentPosition(session, myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_MAIN_RETURN)
+    }
+
+    @Test
     fun testSessionStepInto() {
         toggleBreakpoint(project, myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_FUN)
         val state: BlockingQueue<CidrDebuggingFixture.DebuggerState> = startDebugSessionAndWaitForPause("fun")

@@ -16,5 +16,5 @@ int main(int argc, const char *argv[]) {
             fun();
         }
     }
-    return 0;
+    return 0;  // LINE_MAIN_RETURN
 }

@@ -6,6 +6,7 @@ import com.jetbrains.cidr.CidrProjectMarkup
 @Suppress("PropertyName")
 class MyTestProjectMarkup(testProjectRoot: VirtualFile) : CidrProjectMarkup(testProjectRoot, true) {
     lateinit var FILE_MAIN: VirtualFile
+    var LINE_MAIN_RETURN = 0
     var LINE_FUN = 0
     var LINE_CALLME = 0
 
