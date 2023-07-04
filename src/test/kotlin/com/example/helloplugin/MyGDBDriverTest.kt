@@ -6,7 +6,6 @@ import com.jetbrains.cidr.CidrTestProjectDescription
 import com.jetbrains.cidr.cpp.CPPTestCase
 import com.jetbrains.cidr.cpp.cmake.CMakeProjectFixture
 import com.jetbrains.cidr.cpp.execution.CMakeExecutionFixture
-import com.jetbrains.cidr.cpp.execution.debugger.gdb.CMakeGDBDebuggingFixture
 import com.jetbrains.cidr.cpp.toolchains.CPPEnvironment
 import com.jetbrains.cidr.execution.debugger.CidrDebuggerTestCase
 import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture
@@ -17,13 +16,13 @@ import org.junit.Test
 import java.util.concurrent.BlockingQueue
 
 class MyGDBDriverTest :
-    CidrDebuggerTestCase<CMakeProjectFixture?, CMakeExecutionFixture?, CMakeGDBDebuggingFixture?, MyTestProjectMarkup>(
+    CidrDebuggerTestCase<CMakeProjectFixture, CMakeExecutionFixture, MyDebuggingFixture, MyTestProjectMarkup>(
         DebuggerDriverKind.GDB, MyTestProjectMarkup.TARGET_NAME,
         CidrTestProjectDescription(MyTestProjectMarkup.PROJECT_DIR)
     ) {
     override fun createProjectFixture(): CMakeProjectFixture = CMakeProjectFixture(myTestDataFixture)
-    override fun createExecutionFixture(): CMakeExecutionFixture = CMakeExecutionFixture(myProjectFixture!!)
-    override fun createDebuggingFixture(): CMakeGDBDebuggingFixture = CMakeGDBDebuggingFixture(myExecutionFixture!!)
+    override fun createExecutionFixture(): CMakeExecutionFixture = CMakeExecutionFixture(myProjectFixture)
+    override fun createDebuggingFixture(): MyDebuggingFixture = MyDebuggingFixture(myExecutionFixture)
     override fun createTestDataFixture(): CidrTestDataFixture = MyTestDataFixture.create()
     override fun createProjectMarkup(projectDir: VirtualFile): MyTestProjectMarkup = MyTestProjectMarkup(projectDir)
     override fun getEnvironment(): CPPEnvironment = CPPTestCase.getTestCPPEnvironment()
