@@ -11,8 +11,8 @@ import com.jetbrains.cidr.cpp.toolchains.CPPEnvironment
 import com.jetbrains.cidr.execution.debugger.CidrDebuggerTestCase
 import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture
 import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture.DriverEvent
+import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture.DriverEvent.Kind.*
 import com.jetbrains.cidr.execution.debugger.DebuggerDriverKind
-import com.jetbrains.cidr.execution.debugger.backend.DebuggerDriver.StopPlace
 import org.junit.Test
 import java.util.concurrent.BlockingQueue
 
@@ -30,16 +30,25 @@ class MyGDBDriverTest :
 
     @Test
     @Throws(Exception::class)
-    fun testBreakpointInMain() {
+    fun testDriverStepInto() {
         val events: BlockingQueue<out DriverEvent?> = startDriverAndLaunch(
-            "arg", targetExecutionCheckpointEvents(),
-            withBreakpoint(myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_BREAKPOINT)
+            "fun", targetExecutionCheckpointEvents(),
+            withBreakpoint(myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_FUN)
         )
-        val stopPlace: StopPlace = CidrDebuggingFixture.waitForEvent(events, BREAKPOINT).stopPlace
+        var stopPlace = CidrDebuggingFixture.waitForEvent(events, BREAKPOINT).stopPlace
         assertFrame(
             stopPlace.frame, 0,
-            myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_BREAKPOINT,
-            "main"
+            myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_FUN,
+            ".*\\b(fun)\\b.*"
+        )
+
+        myDriver.stepInto(stopPlace.thread, false, false)
+
+        stopPlace = CidrDebuggingFixture.waitForEvent(events, INTERRUPTED).stopPlace
+        assertFrame(
+            stopPlace.frame, 0,
+            myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_CALLME,
+            ".*\\b(callme)\\b.*"
         )
     }
 }

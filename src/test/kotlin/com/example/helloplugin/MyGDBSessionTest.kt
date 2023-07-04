@@ -9,9 +9,13 @@ import com.jetbrains.cidr.cpp.cmake.CMakeProjectFixture
 import com.jetbrains.cidr.cpp.execution.CMakeExecutionFixture
 import com.jetbrains.cidr.cpp.execution.debugger.gdb.CMakeGDBDebuggingFixture
 import com.jetbrains.cidr.cpp.toolchains.CPPEnvironment
+import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture
+import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture.DebuggerState.*
+import com.jetbrains.cidr.execution.debugger.CidrDebuggingFixture.waitForEvent
 import com.jetbrains.cidr.execution.debugger.CidrDebuggingTestCase
 import com.jetbrains.cidr.execution.debugger.DebuggerDriverKind
 import org.junit.Test
+import java.util.concurrent.BlockingQueue
 
 
 class MyGDBSessionTest :
@@ -27,9 +31,16 @@ class MyGDBSessionTest :
 
     @Test
     @Throws(Exception::class)
-    fun testForceStepIntoFunctionWithNoSource() {
-        toggleBreakpoint(project, myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_BREAKPOINT)
-        startDebugSessionAndWaitForPause()
-        assertCurrentPosition(session, myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_BREAKPOINT)
+    fun testSessionStepInto() {
+        toggleBreakpoint(project, myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_FUN)
+        val state: BlockingQueue<CidrDebuggingFixture.DebuggerState> = startDebugSessionAndWaitForPause("fun")
+        assertCurrentPosition(session, myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_FUN)
+
+        session.stepInto()
+
+        waitForEvent(state, RESUMED)
+        waitForEvent(state, PAUSED)
+        assertCurrentPosition(session, myProjectMarkup.FILE_MAIN, myProjectMarkup.LINE_CALLME)
+
     }
 }
