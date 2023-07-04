@@ -2,7 +2,6 @@ package com.example.helloplugin
 
 import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.vfs.VirtualFile
-import com.jetbrains.cidr.CidrProjectMarkup
 import com.jetbrains.cidr.CidrTestDataFixture
 import com.jetbrains.cidr.CidrTestProjectDescription
 import com.jetbrains.cidr.cpp.CPPTestCase
@@ -20,20 +19,10 @@ import java.io.File
 import java.util.concurrent.BlockingQueue
 
 class MyGDBDriverTest :
-    CidrDebuggerTestCase<CMakeProjectFixture?, CMakeExecutionFixture?, CMakeGDBDebuggingFixture?, MyGDBDriverTest.MyTestProjectMarkup>(
+    CidrDebuggerTestCase<CMakeProjectFixture?, CMakeExecutionFixture?, CMakeGDBDebuggingFixture?, MyTestProjectMarkup>(
         DebuggerDriverKind.GDB, MyTestProjectMarkup.TARGET_NAME,
         CidrTestProjectDescription(MyTestProjectMarkup.PROJECT_DIR)
     ) {
-    @Suppress("PropertyName")
-    class MyTestProjectMarkup(testProjectRoot: VirtualFile) : CidrProjectMarkup(testProjectRoot, true) {
-        lateinit var FILE_MAIN: VirtualFile
-        var LINE_BREAKPOINT = 0
-
-        companion object {
-            const val PROJECT_DIR = "debug-project/"
-            const val TARGET_NAME = "debug_project"
-        }
-    }
 
     override fun createProjectFixture(): CMakeProjectFixture {
         return CMakeProjectFixture(myTestDataFixture)
