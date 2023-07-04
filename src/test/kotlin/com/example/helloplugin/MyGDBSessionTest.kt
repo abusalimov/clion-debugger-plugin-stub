@@ -18,30 +18,12 @@ class MyGDBSessionTest :
     CidrDebuggingTestCase<CMakeProjectFixture?, CMakeExecutionFixture?, CMakeGDBDebuggingFixture?, MyTestProjectMarkup>(
         DebuggerDriverKind.GDB, MyTestProjectMarkup.TARGET_NAME, MyTestProjectMarkup.PROJECT_DIR
     ) {
-
-    override fun createProjectFixture(): CMakeProjectFixture {
-        return CMakeProjectFixture(myTestDataFixture)
-    }
-
-    override fun createExecutionFixture(): CMakeExecutionFixture {
-        return CMakeExecutionFixture(myProjectFixture!!)
-    }
-
-    override fun createDebuggingFixture(): CMakeGDBDebuggingFixture {
-        return CMakeGDBDebuggingFixture(myExecutionFixture!!)
-    }
-
-    override fun createTestDataFixture(): CidrTestDataFixture {
-        return MyTestDataFixture.create()
-    }
-
-    override fun createProjectMarkup(projectDir: VirtualFile): MyTestProjectMarkup {
-        return MyTestProjectMarkup(projectDir)
-    }
-
-    override fun getEnvironment(): CPPEnvironment {
-        return CPPTestCase.getTestCPPEnvironment()
-    }
+    override fun createProjectFixture(): CMakeProjectFixture = CMakeProjectFixture(myTestDataFixture)
+    override fun createExecutionFixture(): CMakeExecutionFixture = CMakeExecutionFixture(myProjectFixture!!)
+    override fun createDebuggingFixture(): CMakeGDBDebuggingFixture = CMakeGDBDebuggingFixture(myExecutionFixture!!)
+    override fun createTestDataFixture(): CidrTestDataFixture = MyTestDataFixture.create()
+    override fun createProjectMarkup(projectDir: VirtualFile): MyTestProjectMarkup = MyTestProjectMarkup(projectDir)
+    override fun getEnvironment(): CPPEnvironment = CPPTestCase.getTestCPPEnvironment()
 
     @Test
     @Throws(Exception::class)
